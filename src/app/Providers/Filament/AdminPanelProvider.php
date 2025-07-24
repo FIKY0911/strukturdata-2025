@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Widgets\ProductLineChart;
+use App\Filament\Admin\Widgets\ProductStockOverview;
+use App\Filament\Admin\Widgets\TotalProductStat;
+use App\Models\Product;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -19,6 +23,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 
@@ -49,7 +54,10 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Admin/Clusters'), for: 'App\\Filament\\Admin\\Clusters')
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
-                \Awcodes\Overlook\Widgets\OverlookWidget::class,
+                //\Awcodes\Overlook\Widgets\OverlookWidget::class,
+                TotalProductStat::class,
+                ProductStockOverview::class,
+                //ProductLineChart::class,
             ])
             ->navigationGroups([
                 NavigationGroup::make()
@@ -57,8 +65,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
-                    ->label(fn () => auth()->user()->name)
-                    ->url(fn (): string => EditProfilePage::getUrl())
+                    ->label(fn() => Auth::user()->name)
+                    ->url(fn(): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
                 // 'profile' => \Filament\Navigation\MenuItem::make()
                 //     ->label(fn () => auth()->user()->name)
